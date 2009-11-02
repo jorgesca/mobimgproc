@@ -1,6 +1,11 @@
+% using dialation, edge detection, and hough transform to 
+% detect the lines
+%
+
+
 clear;
 
-RGB=imread('c:\project\images\blob1.jpg'); % Load the image file and store it as the variable I. 
+RGB=imread('c:\project\mobimgproc\images\white-1.jpg'); % Load the image file and store it as the variable I. 
 
 whos % Type "whos" in order to find out the size and class of all stored variables. 
 
@@ -13,38 +18,46 @@ whos
 
 I = rgb2gray(RGB);
 threshold = graythresh(I);
-BW = im2bw(I,threshold);
+%threshold = 0.98;
+%BW = im2bw(I,threshold);
+
+BW = I;
 
 figure, imshow(BW);
 
-BWin = not( BW);
+%BWin = not( BW);
+BWin = BW;
 
-se1 = strel('square',10);
+se1 = strel('square',5);
 
 %BWindialated = imdilate(BWin, se1);
 
 %figure, imshow(BWindialated);
 
-%BWedged = edge(BWin,'Canny');
+BWedged = edge(BWin,'Canny');
 
 %BWedged = bwperim(BWin);
 
 %BWedged = bwmorph(BWindialated,'skel',10);
 
-BWedged = BWin;
+%BWedged = BWin;
 
-se2 = strel('square',15);
+se2 = strel('square',32);
 
-%BWedged1 = imdilate(BWedged, se2);
+BWedged1 = imdilate(BWedged, se2);
 
-BWedged1 = BWedged;
+%BWedged1 = BWedged;
 
-se3 = strel('square',10);
+se3 = strel('square',33);
 %BWedged2 = imerode(BWedged1, se2);
 BWedged2 = BWedged1;
 
 
 figure, imshow(BWedged2);
+
+BWedged2 = imerode(BWedged2, se3);
+
+BWedged2 = bwmorph(BWedged2,'skel',Inf);
 
 [H,theta,rho] = hough(BWedged2);
 
@@ -52,10 +65,10 @@ figure, imshow(BWedged2);
 P = houghpeaks(H,5000,'threshold',ceil(0.5*max(H(:))) );
 lines = houghlines(BWedged,theta,rho,P,'FillGap',4,'MinLength',5);
 
-%figure, imshow(imadjust(mat2gray(H)),[],'XData',theta,'YData',rho,'InitialMagnification','fit');
-%xlabel('\theta (degrees)'), ylabel('\rho');
-%axis on, axis normal;
-%colormap(hot);
+figure, imshow(imadjust(mat2gray(H)),[],'XData',theta,'YData',rho,'InitialMagnification','fit');
+xlabel('\theta (degrees)'), ylabel('\rho');
+axis on, axis normal;
+colormap(hot);
 
 figure, imshow(BWedged2), hold on;
 
