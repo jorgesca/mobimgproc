@@ -1,12 +1,16 @@
 clear all;
-% I = imread('C:\Project\mobimgproc\images\white-2-complete.jpg');
-I = imread('C:\Project\mobimgproc\images\white-1.jpg');
+I = imread('C:\Project\mobimgproc\images\white-2-complete.jpg');
+% I = imread('C:\Project\mobimgproc\images\white-1.jpg');
+% I = imread('C:\Project\mobimgproc\images\paper1.jpg');
 
-Ig = rgb2gray(I);
+PSF = fspecial('gaussian',7,10);
+Iblur = imfilter(I,PSF,'symmetric','conv');
+
+Ig = rgb2gray(Iblur);
 figure, imshow(Ig);
 
 [junk threshold] = edge(Ig, 'sobel');
-fudgeFactor = .4;
+fudgeFactor = .7;
 BWs = edge(Ig,'sobel', threshold * fudgeFactor);
 figure, imshow(BWs), title('binary gradient mask');
 
@@ -31,10 +35,5 @@ BWfinal = imerode(BWnobord,seD);
 BWfinal = imerode(BWfinal,seD);
 figure, imshow(BWfinal), title('segmented image');
 
-se90 = strel('line', 3, 200);
-se0 = strel('line', 3, 0);
-
-BWsdil = imdilate(BWfinal, [se90 se0]);
-figure, imshow(BWsdil), title('dilated gradient mask');
 
 % figure, imshow(BW);

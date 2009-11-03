@@ -1,6 +1,6 @@
 clear all;
-% I = imread('C:\Project\mobimgproc\images\white-1.jpg');
-I = imread('C:\Project\mobimgproc\images\white-2-complete.jpg');
+I = imread('C:\Project\mobimgproc\images\white-1.jpg');
+% I = imread('C:\Project\mobimgproc\images\white-2-complete.jpg');
 % I = imread('C:\Project\mobimgproc\images\white-2-complete-con2.jpg');
 % I = imread('C:\Project\mobimgproc\images\12092009043.jpg');
 % I = imread('C:\Project\mobimgproc\images\white-2-complete-con.jpg');
