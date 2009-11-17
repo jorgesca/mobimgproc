@@ -1,9 +1,10 @@
 clear all;
+% I = imread('C:\Project\mobimgproc\images\21102009077.jpg');
 I = imread('C:\Project\mobimgproc\images\white-2-complete.jpg');
 % I = imread('C:\Project\mobimgproc\images\white-1.jpg');
 % I = imread('C:\Project\mobimgproc\images\paper1.jpg');
 
-PSF = fspecial('gaussian',7,10);
+PSF = fspecial('gaussian',15,10);
 Iblur = imfilter(I,PSF,'symmetric','conv');
 
 Ig = rgb2gray(Iblur);
@@ -19,7 +20,7 @@ se90 = strel('line', 3, 0);
 se0 = strel('line', 3, 150);
 
 BWsdil = imdilate(BWs, [se90 se0]);
-figure, imshow(BWsdil), title('dilated gradient mask');
+figure, imshow(BWsdil), title('dilated gradient mask'); 
 
 % BWdfill = imfill(BWsdil, 'holes');
 
