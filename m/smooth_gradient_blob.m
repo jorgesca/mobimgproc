@@ -1,7 +1,7 @@
 clear all;
-I = imread('C:\Project\mobimgproc\images\21102009077.jpg');
+% I = imread('C:\Project\mobimgproc\images\21102009077.jpg');
 % I = imread('C:\Project\mobimgproc\images\white-2-complete.jpg');
-% I = imread('C:\Project\mobimgproc\images\white-1.jpg');
+I = imread('C:\Project\mobimgproc\images\white-1.jpg');
 % I = imread('C:\Project\mobimgproc\images\paper1.jpg');
 
 PSF = fspecial('gaussian',15,10);
@@ -18,33 +18,106 @@ Ig = J;
 [junk threshold] = edge(Ig, 'sobel');
 fudgeFactor = .7;
 BWs = edge(Ig,'sobel', threshold * fudgeFactor);
-figure, imshow(BWs), title('binary gradient mask');
+% figure, imshow(BWs), title('binary gradient mask');
 
 
 se90 = strel('line', 3, 90); %optimal value 3, 0
 se0 = strel('line', 3, 0); %optimal value 3, 150
 
 BWsdil = imdilate(BWs, [se90 se0]);
-figure, imshow(BWsdil), title('dilated gradient mask'); 
+% figure, imshow(BWsdil), title('dilated gradient mask'); 
 
 
 BWnobord = imclearborder(BWsdil, 1); %optimal value 4
-figure, imshow(BWnobord), title('cleared border image');
+% figure, imshow(BWnobord), title('cleared border image');
 
 
 J1 = imresize(BWnobord, 0.3);
-figure, imshow(J1), title('second resized image');
+% % figure, imshow(J1), title('second resized image');
 
 J2 = imresize(J1, 3);
 figure, imshow(J2), title('third resized image');
+
+se = strel('square', 30); 
+
+J2sdil = imdilate(J2,se);
+
+J2erod = imerode(J2sdil,se);
+
+
+BW = not(J2erod);
+% BW = J2sdil;
+
+cc = bwconncomp(BW);
+
+Jlabeled = labelmatrix(cc);
+RGB_label = label2rgb(Jlabeled);
+imshow(RGB_label,'InitialMagnification','fit');
+
+s = regionprops(BW, 'Centroid', 'BoundingBox');
+centroids = cat(1, s.Centroid);
+bounds = cat(1, s.BoundingBox);
+
+
+hold on
+
+plot(centroids(:,1), centroids(:,2), 'k*')
+
+for k = 1 : length(bounds)
+    rectangle('Position', bounds(k,:), ...
+        'EdgeColor','k');
+end
+hold off
+
+% L = bwlabel(J2sdil);
+% figure, imshow(L), title('Labeled'); 
+% 
+% find(cc == 1)
 
 % se90 = strel('line', 20, 90);
 % se0 = strel('line', 20, 0);
 % BWsdil = imdilate(J, [se90 se0]);
 % figure, imshow(BWsdil), title('dilated after resize'); 
 % 
-frame_plot(BWsdil, 30, 30);
-hold off
+% frame_plot(BWsdil, 30, 30);
+
+
+% hold off
+% 
+% [H,theta,rho] = hough(BWsdil);
+% 
+% P = houghpeaks(H,5000,'threshold',ceil(0.5*max(H(:))) );
+% lines = houghlines(BWsdil,theta,rho,P,'FillGap',4,'MinLength',5);
+% 
+% figure, imshow(imadjust(mat2gray(H)),[],'XData',theta,'YData',rho,'InitialMagnification','fit');
+% xlabel('\theta (degrees)'), ylabel('\rho');
+% axis on, axis normal;
+% colormap(hot);
+% 
+% figure, imshow(BWsdil), hold on;
+% 
+% %figure, imshow(I), hold on
+% max_len = 0;
+% 
+% length(lines)
+% for k = 1:length(lines)
+%    xy = [lines(k).point1; lines(k).point2];
+%    plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','green');
+% 
+%    % Plot beginnings and ends of lines
+%    plot(xy(1,1),xy(1,2),'x','LineWidth',2,'Color','yellow');
+%    plot(xy(2,1),xy(2,2),'x','LineWidth',2,'Color','red');
+% 
+%    % Determine the endpoints of the longest line segment
+%    len = norm(lines(k).point1 - lines(k).point2);
+%    if ( len > max_len)
+%       max_len = len;
+%       xy_long = xy;
+%    end
+% end
+% 
+% plot(xy_long(:,1),xy_long(:,2),'LineWidth',2,'Color','red');
+
 % 
 % BW = not(BWsdil);
 % 
