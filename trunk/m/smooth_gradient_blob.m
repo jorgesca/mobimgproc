@@ -1,14 +1,16 @@
 clear all;
 % I = imread('C:\Project\mobimgproc\images\21102009077.jpg');
-% I = imread('C:\Project\mobimgproc\images\white-2-complete.jpg');
-I = imread('C:\Project\mobimgproc\images\white-1.jpg');
+ I = imread('C:\Project\mobimgproc\images\white-2-complete.jpg');
+% I = imread('C:\Project\mobimgproc\images\white-1.jpg');
 % I = imread('C:\Project\mobimgproc\images\paper1.jpg');
+% I = imread('C:\Project\mobimgproc\images\white-1-dottedline.jpg');
 
 PSF = fspecial('gaussian',15,10);
 Iblur = imfilter(I,PSF,'symmetric','conv');
 
 Ig = rgb2gray(Iblur);
 figure, imshow(Ig);
+hold off;
 
 J = imresize(Ig, 0.6);
 % figure, imshow(J), title('first resized image');
@@ -62,6 +64,11 @@ bounds = cat(1, s.BoundingBox);
 hold on
 
 plot(centroids(:,1), centroids(:,2), 'k*')
+
+bounds = h1(BW, bounds);
+bounds = h4(BW, bounds);
+%bounds = h2(BW, bounds);
+bounds = h3(Jlabeled, cc.NumObjects , bounds);
 
 for k = 1 : length(bounds)
     rectangle('Position', bounds(k,:), ...
