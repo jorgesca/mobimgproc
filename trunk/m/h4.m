@@ -1,5 +1,6 @@
 % Heuristic 4
 % Remove all the blobs which their height is bigger than their width
+% Basically it removes all the vertical rectangles!
 
 
 function newbounds = h4(I, bounds) 

@@ -1,9 +1,16 @@
 clear all;
-% I = imread('C:\Project\mobimgproc\images\21102009077.jpg');
- I = imread('C:\Project\mobimgproc\images\white-2-complete.jpg');
+I = imread('C:\Project\mobimgproc\images\21102009077.jpg');
+% I = imread('C:\Project\mobimgproc\images\white-2-complete.jpg');
+%  I = imread('C:\Project\mobimgproc\images\nature.JPG');
 % I = imread('C:\Project\mobimgproc\images\white-1.jpg');
 % I = imread('C:\Project\mobimgproc\images\paper1.jpg');
 % I = imread('C:\Project\mobimgproc\images\white-1-dottedline.jpg');
+
+% I = imread('C:\Project\mobimgproc\images\19112009116.jpg');
+% I = imread('C:\Project\mobimgproc\images\19112009117.jpg');
+% I = imread('C:\Project\mobimgproc\images\19112009118.jpg');
+% I = imread('C:\Project\mobimgproc\images\19112009119.jpg');
+% I = imread('C:\Project\mobimgproc\images\19112009121.jpg');
 
 PSF = fspecial('gaussian',15,10);
 Iblur = imfilter(I,PSF,'symmetric','conv');
@@ -20,7 +27,7 @@ Ig = J;
 [junk threshold] = edge(Ig, 'sobel');
 fudgeFactor = .7;
 BWs = edge(Ig,'sobel', threshold * fudgeFactor);
-% figure, imshow(BWs), title('binary gradient mask');
+figure, imshow(BWs), title('binary gradient mask');
 
 
 se90 = strel('line', 3, 90); %optimal value 3, 0
@@ -34,18 +41,21 @@ BWnobord = imclearborder(BWsdil, 1); %optimal value 4
 % figure, imshow(BWnobord), title('cleared border image');
 
 
-J1 = imresize(BWnobord, 0.3);
-% % figure, imshow(J1), title('second resized image');
+  J1 = imresize(BWnobord, 0.3);
+% figure, imshow(J1), title('second resized image');
 
-J2 = imresize(J1, 3);
-figure, imshow(J2), title('third resized image');
+  J2 = imresize(J1, 3);
+ figure, imshow(J2), title('third resized image');
 
 se = strel('square', 30); 
 
+% J2sdil = imdilate(BWnobord,se);
 J2sdil = imdilate(J2,se);
 
-J2erod = imerode(J2sdil,se);
+se = strel('square', 30); 
 
+J2erod = imerode(J2sdil,se);
+ figure, imshow(J2erod), title('third resized image');
 
 BW = not(J2erod);
 % BW = J2sdil;
@@ -65,10 +75,10 @@ hold on
 
 plot(centroids(:,1), centroids(:,2), 'k*')
 
-bounds = h1(BW, bounds);
-bounds = h4(BW, bounds);
+% bounds = h1(BW, bounds);
+%bounds = h4(BW, bounds);
 %bounds = h2(BW, bounds);
-bounds = h3(Jlabeled, cc.NumObjects , bounds);
+%bounds = h3(Jlabeled, cc.NumObjects , bounds);
 
 for k = 1 : length(bounds)
     rectangle('Position', bounds(k,:), ...
