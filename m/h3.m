@@ -22,7 +22,7 @@ for i = 1: length(bounds)
         end
     end
     
-    if cid < 4 % check whether the number of colors found in the cropped blob is less than 4
+    if cid < 5 % check whether the number of colors found in the cropped blob is less than 4
         count = count + 1;
         idx(count) = i;
     end   
