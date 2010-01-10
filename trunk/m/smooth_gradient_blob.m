@@ -12,17 +12,20 @@ I = imread('C:\Project\mobimgproc\images\21102009077.jpg');
 % I = imread('C:\Project\mobimgproc\images\19112009119.jpg');
 % I = imread('C:\Project\mobimgproc\images\19112009121.jpg');
 
+
 PSF = fspecial('gaussian',15,10);
 Iblur = imfilter(I,PSF,'symmetric','conv');
 
-Ig = rgb2gray(Iblur);
+figure, imshow(Iblur);
+
+Ig = rgb2gray(I);
 figure, imshow(Ig);
 hold off;
 
 J = imresize(Ig, 0.6);
-% figure, imshow(J), title('first resized image');
+figure, imshow(J), title('first resized image');
 
-Ig = J; 
+%Ig = J; 
 
 [junk threshold] = edge(Ig, 'sobel');
 fudgeFactor = .7;
